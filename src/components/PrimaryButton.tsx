@@ -19,7 +19,7 @@ export const PrimaryButton = ({
       type={type}
       onClick={onClick}
       className={`w-full py-6 bg-[rgb(30,64,175)]   text-lg font-semibold mb-4 ${className}`}
-      variant="default" // ShadCN's primary style
+      variant="default" 
     >
       {children}
     </Button>

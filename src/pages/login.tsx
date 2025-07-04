@@ -12,15 +12,13 @@ import { SecondaryButton } from "@/components/SecondaryButton";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Input } from "@/components/ui/input";
-import LanguageSwitcher from "@/components/LanguageSwitcher"; // ✅ import it
+import LanguageSwitcher from "@/components/LanguageSwitcher"; 
 import { useTranslation } from 'react-i18next';
-// 💡 1. Définir le schéma de validation Zod
 const loginSchema = z.object({
   email: z.string().email("Email invalide"),
   password: z.string().min(6, "Mot de passe trop court"),
 });
 
-// 💡 2. Déduire le type à partir de Zod
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login({ csrfToken }: { csrfToken: string }) {
@@ -54,7 +52,7 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
     <PublicLayout>
       <div className="h-[80vh] flex flex-col items-center justify-center bg-gray-100">
         <div className="w-full flex justify-end px-8">
-          <LanguageSwitcher /> {/* ✅ Language toggle here */}
+          <LanguageSwitcher /> 
         </div>        <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white p-8 rounded-xl shadow-md w-[400px] space-y-4"
@@ -82,9 +80,11 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
 
           {loginError && <p className="text-sm text-red-600 text-center">{loginError}</p>}
 
-          <PrimaryButton type="submit">{t('signIn')}</PrimaryButton>
+          <PrimaryButton className="px-6 py-2 bg-[#78c400] hover:bg-[#5B9200] text-[#F7F7F7] duration-200" 
+          type="submit">{t('signIn')}</PrimaryButton>
 
-          <SecondaryButton onClick={() => router.push("/register")}>
+          <SecondaryButton className="px-6 py-2 bg-[#33ABA5] hover:bg-[#00514D] text-[#F7F7F7] duration-200"
+           onClick={() => router.push("/register")}>
             {t('signUp')}
           </SecondaryButton>
         </form>
@@ -93,7 +93,6 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
   );
 }
 
-// 📌 Redirection si déjà connecté
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   if (session) {

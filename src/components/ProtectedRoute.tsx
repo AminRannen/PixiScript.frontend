@@ -16,23 +16,20 @@ export default function ProtectedRoute({
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return; // Still loading
+    if (status === "loading") return; 
     
     if (!session) {
       router.push("/login");
     }
   }, [session, status, router]);
 
-  // Show loading while checking authentication
   if (status === "loading") {
     return <>{fallback}</>;
   }
 
-  // Don't render anything if not authenticated (will redirect)
   if (!session) {
     return null;
   }
 
-  // User is authenticated, render the protected content
   return <>{children}</>;
 }

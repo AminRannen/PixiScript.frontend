@@ -1,11 +1,10 @@
-// components/users/ArchiveToggle.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 
 interface ArchiveToggleProps {
   userId: number;
-  currentStatus: string; // "active" or "archived"
+  currentStatus: string; 
   onToggle: (userId: number, newStatus: string) => void;
 }
 

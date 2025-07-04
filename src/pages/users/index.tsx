@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import UserTable from "@/components/users/UserTable";
+import UserTable from "@/components/pages/users/UserTable";
 import { fetchUsers, User } from "@/lib/services/userServices";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
 import { patchUserStatus } from "@/lib/services/userServices";

@@ -1,4 +1,3 @@
-// pages/register.tsx
 
 export default function Register() {
   return (

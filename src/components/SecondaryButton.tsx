@@ -19,7 +19,7 @@ export const SecondaryButton = ({
       type={type}
       onClick={onClick}
       className={`w-full py-6 bg-green-700  text-lg font-semibold mb-4 ${className}`}
-      variant="default" // ShadCN's primary style
+      variant="default"
     >
       {children}
     </Button>

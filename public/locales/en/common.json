@@ -1,0 +1,21 @@
+{
+  "welcome": "Welcome",
+  "login": "Login",
+  "logout": "Logout",
+  "editUser": "Edit User",
+  "updateUser": "Update User",
+  "updating": "Updating",
+  "updateError": "Failed to update user",
+  "accessDenied": "Access denied.",
+  "userNotFound": "User not found.",
+  "cancel": "Cancel",
+  "role": "Role",
+  "status": "Status",
+  "marketer": "Marketer",
+  "admin": "Admin",
+  "active": "Active",
+  "archived": "Archived",
+  "loading": "Loading"
+
+
+}

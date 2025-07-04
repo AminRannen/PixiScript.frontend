@@ -7,14 +7,12 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect if unauthenticated
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status, router]);
 
-  // Handle refresh token failure
   useEffect(() => {
     if (session?.error === "RefreshAccessTokenError") {
       console.warn("Access token expired and refresh failed. Signing out...");
@@ -42,7 +40,6 @@ export default function Dashboard() {
             </button>
       <ChartTest></ChartTest>
 
-            {/* 🧪 For testing purposes */}
        
             
           </div>

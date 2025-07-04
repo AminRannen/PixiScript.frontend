@@ -1,4 +1,4 @@
-import { User } from "@/types"; // Or declare inline 
+import { User } from "@/types"; 
  
 export async function fetchUsers(token: string): Promise<User[]> { 
   const res = await fetch("http://127.0.0.1:8000/api/users", { 
@@ -22,7 +22,7 @@ export async function fetchUsers(token: string): Promise<User[]> {
     last_name: user.last_name, 
     status: user.status, 
     primary_role: user.primary_role, 
-    role: user.role, // Assuming role is part of the user data
+    role: user.role,
   })); 
 } 
 
@@ -125,7 +125,7 @@ export async function createUser(
 }
 export async function updateUser(
   id: number,
-  updatedUser: Partial<User>, // use Partial to allow flexible fields
+  updatedUser: Partial<User>, 
   token: string
 ): Promise<void> {
   const res = await fetch(`http://127.0.0.1:8000/api/users/${id}`, {

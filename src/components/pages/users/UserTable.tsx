@@ -13,7 +13,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { patchUserStatus, deleteUser } from "@/lib/services/userServices";
 import { useSession } from "next-auth/react";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
+import { useTranslation } from "react-i18next";
+
 interface User {
   id: number;
   first_name: string;
@@ -28,8 +30,9 @@ interface UserTableProps {
 }
 
 export default function UserTable({ users }: UserTableProps) {
+  const { t } = useTranslation();
   const [userList, setUserList] = useState<User[]>(users);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]); // ✅ selection state
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { data: session } = useSession();
   const [search, setSearch] = useState("");
   const token = session?.accessToken;
@@ -52,14 +55,14 @@ export default function UserTable({ users }: UserTableProps) {
 
   const handleDelete = async (userId: number) => {
     if (!token) return console.error("No token available");
-    if (!confirm("Are you sure you want to delete this user?")) return;
+    if (!confirm(t("updateError"))) return;
 
     try {
       await deleteUser(userId, token);
       setUserList(prev => prev.filter(user => user.id !== userId));
     } catch (error) {
       console.error("Failed to delete user:", error);
-      alert("Error deleting user");
+      alert(t("updateError"));
     }
   };
 
@@ -72,7 +75,7 @@ export default function UserTable({ users }: UserTableProps) {
   const handleDeleteSelected = async () => {
     if (!token) return console.error("No token available");
     if (selectedIds.length === 0) return;
-    if (!confirm(`Delete ${selectedIds.length} selected users?`)) return;
+    if (!confirm(t("updateError"))) return;
 
     try {
       await Promise.all(selectedIds.map(id => deleteUser(id, token)));
@@ -80,51 +83,53 @@ export default function UserTable({ users }: UserTableProps) {
       setSelectedIds([]);
     } catch (error) {
       console.error("Failed to delete selected users:", error);
-      alert("Error deleting selected users");
+      alert(t("updateError"));
     }
   };
 
   return (
     <div className="p-4">
-      {/* ✅ Delete selected button */}
       {selectedIds.length > 0 && (
         <div className="mb-4 flex justify-end">
           <Button
-            variant="destructive"
+            className="bg-[#EF4E4E] hover:bg-[#E12D39] text-white font-medium border border-[#CF1124] shadow-sm transition-all duration-200 hover:shadow-md"
             onClick={handleDeleteSelected}
           >
-            Delete Selected ({selectedIds.length})
+            {t("deleteSelected", { count: selectedIds.length })}
           </Button>
         </div>
       )}
+
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Users</h2>
+        <h2 className="text-xl font-bold">{t("users")}</h2>
 
         <div className="flex gap-2">
           <Input
-            placeholder="Search users..."
+            placeholder={t("searchUsers")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-64"
           />
-          <Button asChild>
-            <Link href="/users/create">+ Create</Link>
+          <Button
+            className="bg-[#78c400] hover:bg-[#599400] text-[#FFFFFF] font-semibold border border-[#5a9e00] shadow-sm transition-all duration-200 hover:shadow-md"
+            asChild
+          >
+            <Link href="/users/create">+ {t("createUser")}</Link>
           </Button>
         </div>
       </div>
 
-
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead></TableHead> {/* checkbox column */}
+            <TableHead></TableHead>
             <TableHead>ID</TableHead>
-            <TableHead>First Name</TableHead>
-            <TableHead>Last Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("firstName")}</TableHead>
+            <TableHead>{t("lastName")}</TableHead>
+            <TableHead>{t("email")}</TableHead>
+            <TableHead>{t("role")}</TableHead>
+            <TableHead>{t("status")}</TableHead>
+            <TableHead className="text-right">{t("actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -141,36 +146,39 @@ export default function UserTable({ users }: UserTableProps) {
                     type="checkbox"
                     checked={selectedIds.includes(user.id)}
                     onChange={() => handleSelect(user.id)}
+                    className="w-4 h-4 accent-[#FFC200] cursor-pointer"
                   />
                 </TableCell>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.first_name}</TableCell>
                 <TableCell>{user.last_name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.primary_role}</TableCell>
+                <TableCell>{t(user.primary_role)}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs cursor-pointer ${user.status === "archived"
-                      ? "bg-gray-100 text-gray-800"
-                      : "bg-green-100 text-green-800"
+                        ? "bg-gray-100 text-gray-800"
+                        : "bg-[#78c400] text-[#FAFAFA]"
                       }`}
                     onClick={() => toggleStatus(user.id, user.status)}
-                    title="Click to toggle status"
+                    title={t("clickToToggleStatus")}
                   >
-                    {user.status}
+                    {t(user.status)}
                   </span>
                 </TableCell>
                 <TableCell className="text-right space-x-2">
-                  <Button variant="outline" asChild>
-                    <Link href={`/users/${user.id}`}>Edit</Link>
-                  </Button>
-
                   <Button
-                    variant="destructive"
+                    className="px-6 py-2 bg-[#78c400] hover:bg-[#599400] text-[#F7F7F7] duration-200"
+                    asChild
+                  >
+                    <Link href={`/users/${user.id}`}>{t("editUser")}</Link>
+                  </Button>
+                  <Button
+                    className="bg-[#EF4E4E] hover:bg-[#E12D39] text-white font-medium border border-[#CF1124] shadow-sm transition-all duration-200 hover:shadow-md"
                     size="sm"
                     onClick={() => handleDelete(user.id)}
                   >
-                    Delete
+                    {t("delete")}
                   </Button>
                 </TableCell>
               </TableRow>

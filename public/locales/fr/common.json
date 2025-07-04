@@ -1,0 +1,22 @@
+{
+  "welcome": "Bienvenue",
+  "login": "Connexion",
+  "logout": "Déconnexion",
+  
+  "editUser": "Modifier l'utilisateur",
+  "updateUser": "Mettre à jour",
+  "updating": "Mise à jour",
+  "updateError": "Échec de la mise à jour",
+  "accessDenied": "Accès refusé.",
+  "userNotFound": "Utilisateur non trouvé.",
+  "cancel": "Annuler",
+  "role": "Rôle",
+  "status": "Statut",
+  "marketer": "Marketeur",
+  "admin": "Administrateur",
+  "active": "Actif",
+  "archived": "Archivé",
+  "loading": "Chargement"
+
+
+}
