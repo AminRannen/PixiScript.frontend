@@ -23,14 +23,16 @@ import {
   Play,
   MessageSquare,
   Loader2,
+  Layers,
 } from "lucide-react";
+import { generateScript } from "@/lib/services/scriptService";
+import { ScriptFormData } from "@/types/script";
 
 export default function CreateScriptForm() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [generatedScript, setGeneratedScript] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -38,6 +40,7 @@ export default function CreateScriptForm() {
     audience: "",
     tone: "",
     duration: "",
+    script_type: "portrait",
     section_durations: {
       intro: "",
       dev: "",
@@ -74,7 +77,7 @@ export default function CreateScriptForm() {
   }, [form.section_durations, t]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
@@ -91,70 +94,50 @@ export default function CreateScriptForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (status !== "authenticated" || !session) {
-      alert(t("pleaseLoginToCreateScript") || "Please log in to create a script.");
-      return;
+  if (status !== "authenticated" || !session) {
+    alert(t("pleaseLoginToCreateScript") || "Please log in to create a script.");
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    const formData: ScriptFormData = {
+      title: form.title,
+      goal: form.goal,
+      audience: form.audience,
+      tone: form.tone,
+      duration: form.duration,
+      script_type: form.script_type,
+      section_durations: form.section_durations,
+      user_id: session.user.id,
+    };
+
+    const response = await generateScript(session.accessToken, formData);
+        console.log("API Response:", response); // Add this line
+
+    // Make sure we have the script ID before redirecting
+    if (!response?.id) {
+      throw new Error("Script ID not returned from server");
     }
 
-    setIsSubmitting(true);
+    // Redirect to the script details page
+    router.push(`/scripts/${response.id}`);
 
-    try {
-      const response = await fetch("/api/scripts/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-        body: JSON.stringify({
-          title: form.title,
-          goal: form.goal,
-          audience: form.audience,
-          tone: form.tone,
-          duration: form.duration,
-          section_durations: form.section_durations,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || t("scriptGenerationFailed") || "Script generation failed");
-      }
-
-      const scriptData = await response.json();
-      setGeneratedScript(scriptData.data.full_script);
-
-      const saveResponse = await fetch("/api/scripts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-        body: JSON.stringify({
-          ...scriptData.data,
-          user_id: session.user.id,
-        }),
-      });
-
-      if (!saveResponse.ok) {
-        const errorData = await saveResponse.json();
-        throw new Error(errorData.error || t("scriptSaveFailed") || "Script save failed");
-      }
-
-      const savedScript = await saveResponse.json();
-      router.push(`/scripts/${savedScript.data.id}`);
-    } catch (error) {
-      console.error("Error:", error);
-      alert(t("errorOccurredWhileCreatingScript") || "An error occurred while creating the script.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    alert(t("errorOccurredWhileCreatingScript") || "An error occurred while creating the script.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* General Info Card */}
       <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -191,6 +174,25 @@ export default function CreateScriptForm() {
                 placeholder={t("ex5Minutes")}
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="script_type" className="flex items-center gap-1">
+              <Layers className="h-4 w-4" />
+              {t("scriptType") || "Script Type"}
+            </Label>
+            <select
+              name="script_type"
+              value={form.script_type}
+              onChange={handleChange}
+              required
+              className="block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            >
+              <option value="portrait">👤 Portrait</option>
+              <option value="capsule">🎬 Capsule vidéo</option>
+              <option value="promotionnelle">📢 Vidéo promotionnelle</option>
+              <option value="interview">🎤 Interview</option>
+            </select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -239,15 +241,14 @@ export default function CreateScriptForm() {
         </CardContent>
       </Card>
 
+      {/* Section Durations Card */}
       <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Play className="h-5 w-5 text-purple-600" />
             {t("sectionDurations")}
           </CardTitle>
-          <CardDescription>
-            {t("defineDurationPerSection")}
-          </CardDescription>
+          <CardDescription>{t("defineDurationPerSection")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -262,7 +263,6 @@ export default function CreateScriptForm() {
                 min="0"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="dev">{t("developmentSeconds")}</Label>
               <Input
@@ -274,7 +274,6 @@ export default function CreateScriptForm() {
                 min="0"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="conclusion">{t("conclusionSeconds")}</Label>
               <Input
@@ -290,6 +289,7 @@ export default function CreateScriptForm() {
         </CardContent>
       </Card>
 
+      {/* Submit / Loading */}
       {isSubmitting && (
         <div className="flex items-center gap-2 text-blue-600 mt-4">
           <Loader2 className="animate-spin h-5 w-5" />
@@ -297,29 +297,11 @@ export default function CreateScriptForm() {
         </div>
       )}
 
-      {generatedScript && (
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm mt-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <MessageSquare className="h-5 w-5 text-indigo-600" />
-              {t("generatedScript")}
-            </CardTitle>
-            <CardDescription>{t("hereIsTheAutomaticallyGeneratedScript")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <pre className="whitespace-pre-wrap text-gray-800">
-              {generatedScript}
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
       <div className="flex justify-end gap-3 pt-4">
         <Button
           type="button"
-          variant="outline"
           onClick={() => router.back()}
-          className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+          className="bg-[#A8A8A8] hover:bg-[#8B8B8B] text-white font-medium border border-[#8B8B8B] shadow-sm transition-all duration-200 hover:shadow-md"
         >
           {t("cancel")}
         </Button>

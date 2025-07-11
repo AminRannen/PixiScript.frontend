@@ -54,6 +54,7 @@ export default function ScriptTable({
             className="cursor-pointer hover:bg-gray-100"
             onClick={() => router.push(`/scripts/${script.id}`)}
           >
+            
             <TableCell onClick={(e) => e.stopPropagation()}>
               <input
                 type="checkbox"

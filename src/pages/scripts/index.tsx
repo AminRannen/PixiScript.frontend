@@ -1,28 +1,38 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
-import { fetchScripts } from "@/lib/services/scriptService";
-import { ScriptData } from "@/types/script";
+import { fetchScripts, fetchScriptById,fetchSharedScripts } from "@/lib/services/scriptService";
 import ScriptTable from "@/components/pages/scripts/ScriptTable";
 import ScriptToolbar from "@/components/pages/scripts/ScriptToolbar";
 import BulkDeleteBar from "@/components/pages/scripts/BulkDeleteBar";
+import axios from "axios";
+import { ScriptData } from "@/types/script";
 
 export default function ScriptsIndex() {
   const { data: session } = useSession();
   const [scripts, setScripts] = useState<ScriptData[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [search, setSearch] = useState("");
-  const router = useRouter();
+  const [currentView, setCurrentView] = useState<"my" | "shared">("my");
 
-  useEffect(() => {
-    if (!session?.accessToken) return;
-    fetchScripts(session.accessToken)
-      .then((res) => setScripts(res.data.data))
-      .catch(console.error);
-  }, [session]);
+  const accessToken = session?.accessToken;
+
+  const fetchMyScripts = async () => {
+    const res = await fetchScripts(accessToken!);
+    setScripts(res.data.data);
+  };
+
+const loadSharedScripts = async () => {
+  const scripts = await fetchSharedScripts(accessToken!);
+  setScripts(scripts);
+};
+
+useEffect(() => {
+  if (!accessToken) return;
+  if (currentView === "my") fetchMyScripts();
+  else loadSharedScripts();
+}, [accessToken, currentView]);
 
   const handleSelect = (id: number) => {
     setSelectedIds(prev =>
@@ -50,7 +60,12 @@ export default function ScriptsIndex() {
     <PrivateLayout>
       <div className="p-4">
         <BulkDeleteBar selectedCount={selectedIds.length} onDeleteSelected={handleDeleteSelected} />
-        <ScriptToolbar search={search} onSearchChange={setSearch} />
+        <ScriptToolbar
+          search={search}
+          onSearchChange={setSearch}
+          currentView={currentView}
+          onViewChange={setCurrentView}
+        />
         <ScriptTable
           scripts={filteredScripts}
           selectedIds={selectedIds}

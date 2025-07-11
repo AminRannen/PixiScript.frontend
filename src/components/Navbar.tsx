@@ -57,10 +57,11 @@ export default function Navbar() {
                     <Link href={link.href} legacyBehavior passHref>
                       <NavigationMenuLink
                         active={isActive(link.href)}
-                        className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
-                            ? "text-primary-600 border-primary-600"
-                            : "text-gray-800 hover:text-primary-500"
-                          }`}
+                        className={`${navigationMenuTriggerStyle()} ${
+                          isActive(link.href)
+                            ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
+                            : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
+                        }`}
                       >
                         {link.label}
                       </NavigationMenuLink>
@@ -74,10 +75,11 @@ export default function Navbar() {
                       <Link href={link.href} legacyBehavior passHref>
                         <NavigationMenuLink
                           active={isActive(link.href)}
-                          className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
-                              ? "text-primary-600 border-primary-600"
-                              : "text-gray-800 hover:text-primary-500"
-                            }`}
+                          className={`${navigationMenuTriggerStyle()} ${
+                            isActive(link.href)
+                              ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
+                              : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
+                          }`}
                         >
                           {link.label}
                         </NavigationMenuLink>
@@ -91,10 +93,11 @@ export default function Navbar() {
                       <Link href={link.href} legacyBehavior passHref>
                         <NavigationMenuLink
                           active={isActive(link.href)}
-                          className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
-                              ? "text-primary-600 border-primary-600"
-                              : "text-gray-800 hover:text-primary-500"
-                            }`}
+                          className={`${navigationMenuTriggerStyle()} ${
+                            isActive(link.href)
+                              ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
+                              : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
+                          }`}
                         >
                           {link.label}
                         </NavigationMenuLink>
@@ -104,13 +107,37 @@ export default function Navbar() {
               </NavigationMenuList>
             </NavigationMenu>
 
+            {session?.user && (
+              <Link
+                href="/profile"
+                className={`w-9 h-9 flex items-center justify-center rounded-full overflow-hidden border ${
+                  isActive("/profile")
+                    ? "border-primary-500 shadow-md"
+                    : "border-gray-300"
+                } hover:shadow transition`}
+                title={session.user.name || "Profile"}
+              >
+                {session.user.image ? (
+                  <img
+                    src={session.user.image}
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm font-semibold text-white bg-gray-500 w-full h-full flex items-center justify-center">
+                    {session.user.name?.charAt(0).toUpperCase() ?? "?"}
+                  </span>
+                )}
+              </Link>
+            )}
+
             <Button
               onClick={() => signOut()}
-              className="bg-[#EF4E4E] hover:bg-[#E12D39] text-white font-medium border border-[#CF1124] shadow-sm transition-all duration-200 hover:shadow-md"
+              className="bg-[#A8A8A8] hover:bg-[#8B8B8B] text-white font-medium border border-[#8B8B8B] shadow-sm transition-all duration-200 hover:shadow-md"
             >
               {t("logout")}
             </Button>
-
+            
             <LanguageSwitcher />
           </div>
 
@@ -128,12 +155,13 @@ export default function Navbar() {
                     (link) => (
                       <Button
                         key={link.href}
-                        variant={isActive(link.href) ? "default" : "ghost"}
+                        variant="ghost"
                         asChild
-                        className={`justify-start ${isActive(link.href)
-                            ? "bg-primary-500 text-white"
-                            : "hover:bg-primary-50 text-gray-800"
-                          }`}
+                        className={`justify-start ${
+                          isActive(link.href)
+                            ? "bg-primary-100 text-primary-600 font-medium border border-primary-200" // Enhanced active state
+                            : "hover:bg-primary-50 text-gray-800" // Inactive state
+                        }`}
                       >
                         <Link href={link.href}>{link.label}</Link>
                       </Button>
@@ -142,7 +170,7 @@ export default function Navbar() {
 
                   <Button
                     variant="ghost"
-                    className="justify-start text-red-600 hover:bg-red-50"
+                    className="bg-[#A8A8A8] hover:bg-[#8B8B8B] text-white font-medium border border-[#8B8B8B] shadow-sm transition-all duration-200 hover:shadow-md"
                     onClick={() => signOut()}
                   >
                     {t("logout")}

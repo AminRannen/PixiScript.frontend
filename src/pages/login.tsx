@@ -83,10 +83,6 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
           <PrimaryButton className="px-6 py-2 bg-[#78c400] hover:bg-[#5B9200] text-[#F7F7F7] duration-200" 
           type="submit">{t('signIn')}</PrimaryButton>
 
-          <SecondaryButton className="px-6 py-2 bg-[#33ABA5] hover:bg-[#00514D] text-[#F7F7F7] duration-200"
-           onClick={() => router.push("/register")}>
-            {t('signUp')}
-          </SecondaryButton>
         </form>
       </div>
     </PublicLayout>

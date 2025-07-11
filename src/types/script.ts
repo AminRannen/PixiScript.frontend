@@ -29,7 +29,7 @@ export interface ScriptResponse {
     intro_text: string;
     dev_text: string;
     conclusion_text: string;
-    full_script: string;
+    full_script: string; // Add this line
     created_at: string;
     updated_at: string;
   };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 export async function loginUser(email: string, password: string) {
   const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
   return response.data.data;
