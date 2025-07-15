@@ -25,7 +25,7 @@ import {
   Loader2,
   Layers,
 } from "lucide-react";
-import { generateScript } from "@/lib/services/scriptService";
+import { generateScript } from "@/lib/api/scripts/scriptService";
 import { ScriptFormData } from "@/types/script";
 
 export default function CreateScriptForm() {
@@ -179,7 +179,7 @@ export default function CreateScriptForm() {
           <div className="space-y-2">
             <Label htmlFor="script_type" className="flex items-center gap-1">
               <Layers className="h-4 w-4" />
-              {t("scriptType") || "Script Type"}
+              {t("Script Type")}
             </Label>
             <select
               name="script_type"

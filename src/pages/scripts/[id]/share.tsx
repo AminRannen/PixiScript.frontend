@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { fetchUsers } from "@/lib/services/userServices";
+import { fetchUsers } from "@/lib/api/users/userServices";
 import {
   Card,
   CardContent,

@@ -14,6 +14,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -43,9 +49,9 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-primary-600">
-              PixiScript
-            </Link>
+       <Link href="/" className="text-xl font-bold bg-gradient-to-r from-[#78c400] to-[#599400] hover:from-[#599400] hover:to-[#4a7a00] bg-clip-text text-transparent transition-all duration-300">
+  PixiScript
+</Link>
           </div>
 
           {/* Desktop Menu */}
@@ -57,11 +63,10 @@ export default function Navbar() {
                     <Link href={link.href} legacyBehavior passHref>
                       <NavigationMenuLink
                         active={isActive(link.href)}
-                        className={`${navigationMenuTriggerStyle()} ${
-                          isActive(link.href)
+                        className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
                             ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
                             : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
-                        }`}
+                          }`}
                       >
                         {link.label}
                       </NavigationMenuLink>
@@ -75,11 +80,10 @@ export default function Navbar() {
                       <Link href={link.href} legacyBehavior passHref>
                         <NavigationMenuLink
                           active={isActive(link.href)}
-                          className={`${navigationMenuTriggerStyle()} ${
-                            isActive(link.href)
+                          className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
                               ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
                               : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
-                          }`}
+                            }`}
                         >
                           {link.label}
                         </NavigationMenuLink>
@@ -93,11 +97,10 @@ export default function Navbar() {
                       <Link href={link.href} legacyBehavior passHref>
                         <NavigationMenuLink
                           active={isActive(link.href)}
-                          className={`${navigationMenuTriggerStyle()} ${
-                            isActive(link.href)
+                          className={`${navigationMenuTriggerStyle()} ${isActive(link.href)
                               ? "bg-primary-50 text-primary-600 font-medium border border-primary-200"
                               : "text-gray-800 hover:bg-primary-50 hover:text-primary-600"
-                          }`}
+                            }`}
                         >
                           {link.label}
                         </NavigationMenuLink>
@@ -106,39 +109,44 @@ export default function Navbar() {
                   ))}
               </NavigationMenuList>
             </NavigationMenu>
+            <LanguageSwitcher />
 
             {session?.user && (
-              <Link
-                href="/profile"
-                className={`w-9 h-9 flex items-center justify-center rounded-full overflow-hidden border ${
-                  isActive("/profile")
-                    ? "border-primary-500 shadow-md"
-                    : "border-gray-300"
-                } hover:shadow transition`}
-                title={session.user.name || "Profile"}
-              >
-                {session.user.image ? (
-                  <img
-                    src={session.user.image}
-                    alt="User Avatar"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-sm font-semibold text-white bg-gray-500 w-full h-full flex items-center justify-center">
-                    {session.user.name?.charAt(0).toUpperCase() ?? "?"}
-                  </span>
-                )}
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={`w-9 h-9 flex items-center justify-center rounded-full overflow-hidden border ${isActive("/profile")
+                        ? "border-primary-500 shadow-md"
+                        : "border-gray-300"
+                      } hover:shadow transition`}
+                    title={session.user.name || "Profile"}
+                  >
+                    {session.user.image ? (
+                      <img
+                        src={session.user.image}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold text-white bg-gray-500 w-full h-full flex items-center justify-center">
+                        {session.user.name?.charAt(0).toUpperCase() ?? "?"}
+                      </span>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    {t("profile")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    {t("logout")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
 
-            <Button
-              onClick={() => signOut()}
-              className="bg-[#A8A8A8] hover:bg-[#8B8B8B] text-white font-medium border border-[#8B8B8B] shadow-sm transition-all duration-200 hover:shadow-md"
-            >
-              {t("logout")}
-            </Button>
-            
-            <LanguageSwitcher />
+
+
           </div>
 
           {/* Mobile Menu */}
@@ -157,11 +165,10 @@ export default function Navbar() {
                         key={link.href}
                         variant="ghost"
                         asChild
-                        className={`justify-start ${
-                          isActive(link.href)
+                        className={`justify-start ${isActive(link.href)
                             ? "bg-primary-100 text-primary-600 font-medium border border-primary-200" // Enhanced active state
                             : "hover:bg-primary-50 text-gray-800" // Inactive state
-                        }`}
+                          }`}
                       >
                         <Link href={link.href}>{link.label}</Link>
                       </Button>

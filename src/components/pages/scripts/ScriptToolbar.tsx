@@ -22,10 +22,9 @@ export default function ScriptToolbar({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const toggleButtonStyle = (active: boolean) =>
-    `relative overflow-hidden text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-      active
-        ? "bg-gradient-to-r from-[#00625D] to-[#004c49] shadow-lg shadow-[#00625D]/30"
-        : "bg-gradient-to-r from-[#66C0BC] to-[#4ca7a3] hover:from-[#4ca7a3] hover:to-[#3a8e8a] shadow-md shadow-[#66C0BC]/20"
+    `relative overflow-hidden text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${active
+      ? "bg-gradient-to-r from-[#00625D] to-[#004c49] shadow-lg shadow-[#00625D]/30"
+      : "bg-gradient-to-r from-[#66C0BC] to-[#4ca7a3] hover:from-[#4ca7a3] hover:to-[#3a8e8a] shadow-md shadow-[#66C0BC]/20"
     }`;
 
   return (
@@ -42,22 +41,23 @@ export default function ScriptToolbar({
           {/* View Toggle Buttons */}
           <div className="flex bg-white/80 backdrop-blur-sm rounded-xl p-1 shadow-lg shadow-gray-200/50 border border-gray-200/50">
             <button
-              className={toggleButtonStyle(currentView === "my")}
+              className={`${toggleButtonStyle(currentView === "my")} mx-1`}
               onClick={() => onViewChange("my")}
             >
               <span className="relative z-10 flex items-center gap-2">
-                {t("myScripts")}
+                {t("My scripts")}
               </span>
             </button>
             <button
-              className={toggleButtonStyle(currentView === "shared")}
+              className={`${toggleButtonStyle(currentView === "shared")} mx-1`}
               onClick={() => onViewChange("shared")}
             >
               <span className="relative z-10 flex items-center gap-2">
-                {t("sharedWithMe")}
+                {t("Shared with me")}
               </span>
             </button>
           </div>
+
 
           {/* Search Input */}
           <div className="relative">
@@ -71,8 +71,8 @@ export default function ScriptToolbar({
           </div>
 
           {/* Create Button */}
-          <Button 
-            className="bg-gradient-to-r from-[#78c400] to-[#599400] hover:from-[#599400] hover:to-[#4a7a00] text-white font-semibold border border-[#5a9e00] rounded-xl px-6 py-2.5 shadow-lg shadow-[#78c400]/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#78c400]/30" 
+          <Button
+            className="bg-gradient-to-r from-[#78c400] to-[#599400] hover:from-[#599400] hover:to-[#4a7a00] text-white font-semibold border border-[#5a9e00] rounded-xl px-6 py-2.5 shadow-lg shadow-[#78c400]/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#78c400]/30"
             asChild
           >
             <Link href="/scripts/new" className="flex items-center gap-2">
@@ -121,8 +121,8 @@ export default function ScriptToolbar({
           </div>
 
           {/* Create Button */}
-          <Button 
-            className="bg-gradient-to-r from-[#78c400] to-[#599400] hover:from-[#599400] hover:to-[#4a7a00] text-white font-semibold border border-[#5a9e00] rounded-xl px-6 py-3 shadow-lg shadow-[#78c400]/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#78c400]/30 sm:w-auto w-full" 
+          <Button
+            className="bg-gradient-to-r from-[#78c400] to-[#599400] hover:from-[#599400] hover:to-[#4a7a00] text-white font-semibold border border-[#5a9e00] rounded-xl px-6 py-3 shadow-lg shadow-[#78c400]/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#78c400]/30 sm:w-auto w-full"
             asChild
           >
             <Link href="/scripts/new" className="flex items-center justify-center gap-2">

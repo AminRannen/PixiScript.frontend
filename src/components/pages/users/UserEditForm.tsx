@@ -3,7 +3,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { fetchUserById, updateUser, updateUserRole } from "@/lib/services/userServices";
+import { fetchUserById, updateUser, updateUserRole } from "@/lib/api/users/userServices";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";

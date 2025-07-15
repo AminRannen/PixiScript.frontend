@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
-import { patchUserStatus, deleteUser } from "@/lib/services/userServices";
+import { patchUserStatus, deleteUser } from "@/lib/api/users/userServices";
 import { useSession } from "next-auth/react";
 import { Input } from "../../ui/input";
 import { useTranslation } from "react-i18next";

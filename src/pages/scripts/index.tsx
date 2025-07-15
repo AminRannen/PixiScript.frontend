@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
-import { fetchScripts, fetchScriptById,fetchSharedScripts } from "@/lib/services/scriptService";
+import { fetchScripts, fetchScriptById,fetchSharedScripts } from "@/lib/api/scripts/scriptService";
 import ScriptTable from "@/components/pages/scripts/ScriptTable";
 import ScriptToolbar from "@/components/pages/scripts/ScriptToolbar";
 import BulkDeleteBar from "@/components/pages/scripts/BulkDeleteBar";

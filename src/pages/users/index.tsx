@@ -3,9 +3,9 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import UserTable from "@/components/pages/users/UserTable";
-import { fetchUsers, User } from "@/lib/services/userServices";
+import { fetchUsers, User } from "@/lib/api/users/userServices";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
-import { patchUserStatus } from "@/lib/services/userServices";
+import { patchUserStatus } from "@/lib/api/users/userServices";
 
 export default function UsersPage() {
   const { data: session, status } = useSession();

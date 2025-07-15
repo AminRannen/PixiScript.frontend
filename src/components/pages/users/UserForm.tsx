@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createUser } from "@/lib/services/userServices";
+import { createUser } from "@/lib/api/users/userServices";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "react-i18next";
 

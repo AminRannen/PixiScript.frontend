@@ -3,13 +3,13 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
-  .use(LanguageDetector) 
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en', 
+    fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
     interpolation: {
-      escapeValue: false, 
+      escapeValue: false,
     },
     resources: {
       en: {
@@ -58,7 +58,7 @@ i18n
           "scriptGenerationFailed": "Script generation failed",
           "scriptSaveFailed": "Script save failed",
           "errorOccurredWhileCreatingScript": "An error occurred while creating the script.",
-          "generalInformation": "General Information",
+          "general Information": "General Information",
           "defineMainCharacteristics": "Define the main characteristics of your script",
           "exProductXPresentation": "Ex: Product X Presentation",
           "totalDuration": "Total Duration",
@@ -81,7 +81,9 @@ i18n
           "createScript": "Create Script",
           "minute": "minute",
           "second": "second",
-          "create": "Create"
+          "create": "Create",
+          "Script Type": "Script Type",
+          "Shared with me": "Shared with me",
 
         },
       },
@@ -132,7 +134,7 @@ i18n
           "scriptGenerationFailed": "La génération du script a échoué",
           "scriptSaveFailed": "L'enregistrement du script a échoué",
           "errorOccurredWhileCreatingScript": "Une erreur s'est produite lors de la création du script.",
-          "generalInformation": "Informations générales",
+          "general Information": "Informations générales",
           "defineMainCharacteristics": "Définissez les principales caractéristiques de votre script",
           "exProductXPresentation": "Ex : Présentation du produit X",
           "totalDuration": "Durée totale",
@@ -155,7 +157,19 @@ i18n
           "createScript": "Créer le script",
           "minute": "minute",
           "second": "seconde",
-          "create": "Créer"
+          "create": "Créer",
+          "Script Type": "Type de script",
+          "Shared with me": "Partagé avec moi",
+          "My scripts": "Mes scripts",
+          "script": "Script",
+          "selectedText": "Texte sélectionné",
+          "Improve Script Prompt": "Donnez une instruction pour améliorer le script",
+          "Improve Script Placeholder": "Exemple : Rends l'introduction plus chaleureuse",
+          "Improve Script": "Améliorer le script",
+          "inProgress": "En cours",
+          "shareNow": "Partager maintenant",
+          "downloading": "Téléchargement",
+          "downloadPDF": "Télécharger PDF"
 
         },
       },

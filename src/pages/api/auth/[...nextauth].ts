@@ -6,7 +6,7 @@ const log = (message: string, data?: any) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${message}`, data || '');
 };
-
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 const parseBackendExpiresAt = (expires_at: string): number => {
   const isoString = expires_at.replace(' ', 'T') + 'Z';
   return new Date(isoString).getTime();
@@ -21,13 +21,13 @@ const parseBackendExpiresAtSafe = (expires_at: string, fallbackMinutes: number =
   }
 
   return timestamp;
-}; 
+};
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     log("Attempting refresh with refreshToken:", token.refreshToken?.slice(0, 10) + "...");
 
-    const response = await fetch("http://localhost:8000/api/refresh-token", {
+    const response = await fetch(`${API_BASE_URL}/refresh-token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refresh_token: token.refreshToken }),
@@ -39,7 +39,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       throw new Error(data.message || "Refresh failed");
     }
 
-    const expiresAt = parseBackendExpiresAt(data.data.expires_at, 10); 
+    const expiresAt = parseBackendExpiresAt(data.data.expires_at, 10);
 
     log("Refresh successful. New access token expires at:", new Date(expiresAt).toISOString());
 
@@ -57,7 +57,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     return {
       ...token,
       error: "RefreshAccessTokenError",
-      exp: 0, 
+      exp: 0,
     };
   }
 }
@@ -74,7 +74,7 @@ export const authOptions: AuthOptions = {
         try {
           log("Login attempt for:", credentials?.email);
 
-          const response = await fetch("http://localhost:8000/api/login", {
+          const response = await fetch(`${API_BASE_URL}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(credentials),
@@ -96,7 +96,7 @@ export const authOptions: AuthOptions = {
               name: data.data.user.name,
               email: data.data.user.email,
               roles: data.data.user.roles,
-              primary_role: data.data.user.primary_role, 
+              primary_role: data.data.user.primary_role,
               accessToken: data.data.access_token,
               refreshToken: data.data.refresh_token,
               expiresAt,
@@ -124,7 +124,7 @@ export const authOptions: AuthOptions = {
         };
       }
 
-      const bufferTime = 2 * 60 * 1000; 
+      const bufferTime = 2 * 60 * 1000;
       if (token.expiresAt && Date.now() < (token.expiresAt - bufferTime)) {
         const timeUntilExpiry = Math.round((token.expiresAt - Date.now()) / 1000 / 60);
         log("Using existing valid access token. Expires in:", timeUntilExpiry + " minutes");
@@ -139,9 +139,9 @@ export const authOptions: AuthOptions = {
         id: token.id,
         name: token.name,
         email: token.email,
-        roles: token.roles, 
-        primary_role: token.primary_role, 
-      
+        roles: token.roles,
+        primary_role: token.primary_role,
+
       };
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
@@ -160,7 +160,7 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 14 * 24 * 60 * 60, 
+    maxAge: 14 * 24 * 60 * 60,
     updateAge: 60,
   },
   pages: {
