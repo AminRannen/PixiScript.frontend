@@ -50,3 +50,8 @@ export async function downloadScriptPdf(token: string, scriptId: number): Promis
     throw error;
   }
 }
+export async function updateScript(token: string, scriptId: number, scriptData: Partial<Script>): Promise<Script> {
+  return await axiosClient
+    .updateScript<{ success: boolean; data: Script; message: string }>(scriptId, token, scriptData)
+    .then(res => res.data);
+}

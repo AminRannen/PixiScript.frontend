@@ -122,6 +122,20 @@ export default function Dashboard() {
       bgGradient: "from-pink-50 to-pink-100"
     }
   ];
+  // Show loading state while checking auth and roles
+  if (status !== "authenticated" || !session?.user?.roles?.includes("admin")) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-blue-50 to-tertiary-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative">
+            <div className="w-32 h-32 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-8"></div>
+            <Sparkles className="w-12 h-12 text-primary-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          <p className="text-2xl text-gray-600 font-medium">Verifying permissions...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <PrivateLayout>

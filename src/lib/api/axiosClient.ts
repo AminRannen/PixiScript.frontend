@@ -1,4 +1,3 @@
-// lib/api/axiosClient.ts
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -15,7 +14,6 @@ class AxiosClient {
       },
     });
 
-    // Request interceptor for adding auth token
     this.client.interceptors.request.use(
       (config) => {
         return config;
@@ -25,15 +23,14 @@ class AxiosClient {
       }
     );
 
-    // Response interceptor for error handling
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
         console.error(`[AxiosClient] Request failed:`, error);
         
         if (error.response) {
-          const errorMessage = error.response.data?.message || 
-                             `Request failed with status ${error.response.status}`;
+          const errorMessage = error.response.data?.message ||
+                              `Request failed with status ${error.response.status}`;
           throw new Error(errorMessage);
         }
         
@@ -63,7 +60,6 @@ class AxiosClient {
 
     const response: AxiosResponse<T> = await this.client.request(config);
     
-    // Handle 204 No Content responses
     if (response.status === 204) {
       return {} as T;
     }
@@ -94,14 +90,12 @@ class AxiosClient {
     document.body.appendChild(link);
     link.click();
     
-    // Cleanup
     setTimeout(() => {
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
     }, 100);
   }
 
-  // CRUD Methods
   public get<T>(endpoint: string, token: string): Promise<T> {
     return this.request<T>(endpoint, 'GET', token);
   }
@@ -122,13 +116,16 @@ class AxiosClient {
     return this.request<T>(endpoint, 'DELETE', token);
   }
 
-  // Specific API Methods
   public async getMyScripts<T>(token: string): Promise<T> {
     return this.request<T>('my-scripts', 'GET', token);
   }
 
   public improveScript<T>(scriptId: number, token: string, prompt: string): Promise<T> {
     return this.request<T>(`scripts/${scriptId}/improve`, 'POST', token, { prompt });
+  }
+
+  public updateScript<T>(scriptId: number, token: string, scriptData: unknown): Promise<T> {
+    return this.request<T>(`scripts/${scriptId}`, 'PUT', token, scriptData);
   }
 }
 

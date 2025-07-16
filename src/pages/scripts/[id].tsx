@@ -80,7 +80,7 @@ export default function ScriptDetailPage({ script }: ScriptPageProps) {
                 {/* Informations Card */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('generalInformation')}</CardTitle>
+                        <CardTitle>{t('general Information')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2 text-gray-700">
                         <p><strong>🎯 {t('goal')}:</strong> {script.goal}</p>

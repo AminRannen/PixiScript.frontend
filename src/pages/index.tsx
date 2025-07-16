@@ -32,44 +32,44 @@ export default function Home({ user }: { user: any }) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   
   const scriptTypes = [
-    'Marketing Scripts', 
-    'Sales Pitches', 
-    'Video Content', 
-    'Social Media Posts',
-    'Email Campaigns',
-    'Product Descriptions'
+    t('marketingScripts'), 
+    t('salesPitches'), 
+    t('videoContent'), 
+    t('socialMediaPosts'),
+    t('emailCampaigns'),
+    t('productDescriptions')
   ];
 
   const stats = [
-    { icon: FileText, value: "50K+", label: "Scripts Generated", color: "from-[#79C300] to-[#66A300]" },
-    { icon: Users, value: "12K+", label: "Happy Users", color: "from-[#B7E35B] to-[#94CF33]" },
-    { icon: Clock, value: "24/7", label: "AI Powered", color: "from-[#6FB200] to-[#589200]" },
-    { icon: TrendingUp, value: "98%", label: "Success Rate", color: "from-[#C9EA84] to-[#B7E35B]" }
+    { icon: FileText, value: "50K+", label: t('scriptsGenerated'), color: "from-[#79C300] to-[#66A300]" },
+    { icon: Users, value: "12K+", label: t('happyUsers'), color: "from-[#B7E35B] to-[#94CF33]" },
+    { icon: Clock, value: "24/7", label: t('aiPowered'), color: "from-[#6FB200] to-[#589200]" },
+    { icon: TrendingUp, value: "98%", label: t('successRate'), color: "from-[#C9EA84] to-[#B7E35B]" }
   ];
 
   const features = [
     {
       icon: Wand2,
-      title: "AI-Powered Generation",
-      description: "Transform your ideas into compelling scripts with advanced AI technology",
+      title: t('aiPoweredGeneration'),
+      description: t('aiPoweredGenerationDesc'),
       gradient: "from-[#79C300] to-[#66A300]"
     },
     {
       icon: Rocket,
-      title: "Lightning Fast",
-      description: "Generate professional scripts in seconds, not hours",
+      title: t('lightningFast'),
+      description: t('lightningFastDesc'),
       gradient: "from-[#B7E35B] to-[#94CF33]"
     },
     {
       icon: Globe,
-      title: "Multi-Language Support",
-      description: "Create scripts in multiple languages for global reach",
+      title: t('multiLanguageSupport'),
+      description: t('multiLanguageSupportDesc'),
       gradient: "from-[#6FB200] to-[#589200]"
     },
     {
       icon: Share2,
-      title: "Easy Sharing",
-      description: "Export and share your scripts with your team instantly",
+      title: t('easySharing'),
+      description: t('easySharingDesc'),
       gradient: "from-[#C9EA84] to-[#B7E35B]"
     }
   ];
@@ -89,7 +89,7 @@ export default function Home({ user }: { user: any }) {
       }, 2000);
       return () => clearTimeout(timeout);
     }
-  }, [typingText, currentWordIndex]);
+  }, [typingText, currentWordIndex, scriptTypes]);
 
   useEffect(() => {
     const intervals = [
@@ -127,7 +127,7 @@ export default function Home({ user }: { user: any }) {
               <div className={`transform transition-all duration-1000 delay-300 ${animationStep >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                 <h1 className="text-5xl md:text-7xl font-bold mb-6">
                   <span className="bg-gradient-to-r from-[#79C300] via-[#66A300] to-[#6FB200] bg-clip-text text-transparent">
-                    Generate
+                    {t('generate')}
                   </span>
                   <br />
                   <span className="text-gray-800">
@@ -136,8 +136,7 @@ export default function Home({ user }: { user: any }) {
                   </span>
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  Transform your ideas into powerful scripts with AI magic. 
-                  Create compelling content that converts in seconds.
+                  {t('heroDescription')}
                 </p>
               </div>
 
@@ -148,7 +147,7 @@ export default function Home({ user }: { user: any }) {
                     <button className="group relative bg-gradient-to-r from-[#79C300] to-[#66A300] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden">
                       <span className="relative z-10 flex items-center gap-2">
                         <Zap className="w-5 h-5 group-hover:animate-pulse" />
-                        Create New Script
+                        {t('createNewScript')}
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-[#66A300] to-[#6FB200] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -159,7 +158,7 @@ export default function Home({ user }: { user: any }) {
                     <button className="group bg-white text-gray-800 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-2 border-gray-200 hover:border-[#B7E35B]">
                       <span className="flex items-center gap-2">
                         <FileText className="w-5 h-5 group-hover:text-[#79C300] transition-colors" />
-                        View My Scripts
+                        {t('viewMyScripts')}
                       </span>
                     </button>
                   </Link>
@@ -196,10 +195,10 @@ export default function Home({ user }: { user: any }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                Why Choose <span className="bg-gradient-to-r from-[#79C300] to-[#66A300] bg-clip-text text-transparent">PixiScript</span>?
+                {t('whyChoose')} <span className="bg-gradient-to-r from-[#79C300] to-[#66A300] bg-clip-text text-transparent">{t('appName')}</span>?
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Experience the future of content creation with our cutting-edge AI technology
+                {t('featuresSubtitle')}
               </p>
             </div>
 
@@ -231,14 +230,14 @@ export default function Home({ user }: { user: any }) {
         <div className="relative z-10 py-16 bg-gradient-to-r from-[#79C300] to-[#66A300]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-bold text-white mb-8">
-              Ready to create amazing scripts?
+              {t('readyToCreate')}
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/scripts/new">
                 <button className="bg-white text-[#79C300] px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:bg-[#EEFBDE]">
                   <span className="flex items-center gap-2">
                     <Play className="w-5 h-5" />
-                    Start Creating Now
+                    {t('startCreatingNow')}
                   </span>
                 </button>
               </Link>
@@ -247,7 +246,7 @@ export default function Home({ user }: { user: any }) {
                 <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-[#79C300] transform hover:scale-105 transition-all duration-300">
                   <span className="flex items-center gap-2">
                     <FileText className="w-5 h-5" />
-                    Browse Templates
+                    {t('browseTemplates')}
                   </span>
                 </button>
               </Link>
@@ -261,38 +260,38 @@ export default function Home({ user }: { user: any }) {
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="p-8">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-gray-800">Quick Start</h3>
+                  <h3 className="text-2xl font-bold text-gray-800">{t('quickStart')}</h3>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
-                    Last login: {new Date().toLocaleDateString()}
+                    {t('lastLogin')}: {new Date().toLocaleDateString()}
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-3 gap-6">
                   <div className="p-6 bg-gradient-to-br from-[#EEFBDE] to-[#D6F1AD] rounded-xl border border-[#C9EA84]">
                     <Code className="w-8 h-8 text-[#66A300] mb-3" />
-                    <h4 className="font-semibold text-gray-800 mb-2">Marketing Script</h4>
-                    <p className="text-sm text-gray-600 mb-4">Generate compelling marketing copy</p>
+                    <h4 className="font-semibold text-gray-800 mb-2">{t('marketingScript')}</h4>
+                    <p className="text-sm text-gray-600 mb-4">{t('marketingScriptDesc')}</p>
                     <Link href="/scripts/new?type=marketing" className="text-[#66A300] hover:text-[#79C300] font-medium text-sm">
-                      Create now →
+                      {t('createNow')} →
                     </Link>
                   </div>
                   
                   <div className="p-6 bg-gradient-to-br from-[#D6F1AD] to-[#C9EA84] rounded-xl border border-[#B7E35B]">
                     <Star className="w-8 h-8 text-[#589200] mb-3" />
-                    <h4 className="font-semibold text-gray-800 mb-2">Sales Pitch</h4>
-                    <p className="text-sm text-gray-600 mb-4">Craft persuasive sales presentations</p>
+                    <h4 className="font-semibold text-gray-800 mb-2">{t('salesPitch')}</h4>
+                    <p className="text-sm text-gray-600 mb-4">{t('salesPitchDesc')}</p>
                     <Link href="/scripts/new?type=sales" className="text-[#589200] hover:text-[#6FB200] font-medium text-sm">
-                      Create now →
+                      {t('createNow')} →
                     </Link>
                   </div>
                   
                   <div className="p-6 bg-gradient-to-br from-[#C9EA84] to-[#B7E35B] rounded-xl border border-[#94CF33]">
                     <Globe className="w-8 h-8 text-[#4B7A00] mb-3" />
-                    <h4 className="font-semibold text-gray-800 mb-2">Social Media</h4>
-                    <p className="text-sm text-gray-600 mb-4">Create engaging social content</p>
+                    <h4 className="font-semibold text-gray-800 mb-2">{t('socialMedia')}</h4>
+                    <p className="text-sm text-gray-600 mb-4">{t('socialMediaDesc')}</p>
                     <Link href="/scripts/new?type=social" className="text-[#4B7A00] hover:text-[#589200] font-medium text-sm">
-                      Create now →
+                      {t('createNow')} →
                     </Link>
                   </div>
                 </div>

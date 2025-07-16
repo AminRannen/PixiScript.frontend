@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/seperator";
 import { Loader2, User, Mail, Calendar, Shield, CheckCircle, XCircle } from "lucide-react";
 import PrivateLayout from "@/components/layouts/PrivateLayout";
+import { useTranslation } from 'react-i18next';
 
 interface UserProfile {
   id: number;
@@ -38,6 +39,7 @@ interface Session {
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { data: session } = useSession() as { data: Session | null };
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,20 +60,20 @@ export default function ProfilePage() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch profile');
+          throw new Error(t('updateError'));
         }
 
         const data = await response.json();
         setProfile(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load profile');
+        setError(err instanceof Error ? err.message : t('updateError'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [session]);
+  }, [session, t]);
 
   const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,7 +108,7 @@ export default function ProfilePage() {
         <Card>
           <CardContent className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 animate-spin" />
-            <span className="ml-2">Loading profile...</span>
+            <span className="ml-2">{t('loading')}</span>
           </CardContent>
         </Card>
       </div>
@@ -119,7 +121,7 @@ export default function ProfilePage() {
         <Card>
           <CardContent className="flex items-center justify-center py-20">
             <XCircle className="w-8 h-8 text-red-500" />
-            <span className="ml-2 text-red-600">Error: {error}</span>
+            <span className="ml-2 text-red-600">{t('errorOccurredWhileCreatingScript')}: {error}</span>
           </CardContent>
         </Card>
       </div>
@@ -135,7 +137,7 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="w-5 h-5" />
-                Profile Overview
+                {t('profile')} {t('general Information')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -159,22 +161,22 @@ export default function ProfilePage() {
 
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">Status:</span>
+                      <span className="text-sm font-medium">{t('status')}:</span>
                       <Badge className={getStatusColor(profile?.status || '')}>
                         {profile?.status === 'active' ? (
                           <CheckCircle className="w-3 h-3 mr-1" />
                         ) : (
                           <XCircle className="w-3 h-3 mr-1" />
                         )}
-                        {profile?.status?.toUpperCase()}
+                        {t(profile?.status?.toLowerCase() || '')}
                       </Badge>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">Role:</span>
+                      <span className="text-sm font-medium">{t('role')}:</span>
                       <Badge className={getRoleColor(profile?.primary_role || '')}>
                         <Shield className="w-3 h-3 mr-1" />
-                        {profile?.primary_role?.toUpperCase()}
+                        {t(profile?.primary_role?.toLowerCase() || '')}
                       </Badge>
                     </div>
                   </div>
@@ -186,45 +188,45 @@ export default function ProfilePage() {
           {/* Profile Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Edit Profile</CardTitle>
+              <CardTitle>{t('edit')} {t('profile')}</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSaveChanges} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="first_name">First Name</Label>
+                    <Label htmlFor="first_name">{t('firstName')}</Label>
                     <Input
                       id="first_name"
                       defaultValue={profile?.first_name || ""}
                       disabled
                       className="bg-gray-50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Read-only field</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('readOnlyField')}</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="last_name">Last Name</Label>
+                    <Label htmlFor="last_name">{t('lastName')}</Label>
                     <Input
                       id="last_name"
                       defaultValue={profile?.last_name || ""}
                       disabled
                       className="bg-gray-50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Read-only field</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('readOnlyField')}</p>
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="name">Display Name</Label>
+                    <Label htmlFor="name">{t('fullName')}</Label>
                     <Input
                       id="name"
                       defaultValue={profile?.name || ""}
-                      placeholder="Enter display name"
+                      placeholder={t('enterDisplayName')}
                     />
-                    <p className="text-xs text-gray-500 mt-1">This is the only field you can modify</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('onlyEditableField')}</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="email">{t('email')}</Label>
                     <Input
                       id="email"
                       type="email"
@@ -232,7 +234,7 @@ export default function ProfilePage() {
                       disabled
                       className="bg-gray-50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Read-only field</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('readOnlyField')}</p>
                   </div>
                 </div>
 
@@ -240,25 +242,25 @@ export default function ProfilePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="status">Account Status</Label>
+                    <Label htmlFor="status">{t('status')}</Label>
                     <Input
                       id="status"
-                      defaultValue={profile?.status || ""}
+                      defaultValue={t(profile?.status?.toLowerCase() || '')}
                       disabled
                       className="bg-gray-50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Read-only field</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('readOnlyField')}</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="primary_role">Primary Role</Label>
+                    <Label htmlFor="primary_role">{t('role')}</Label>
                     <Input
                       id="primary_role"
-                      defaultValue={profile?.primary_role || ""}
+                      defaultValue={t(profile?.primary_role?.toLowerCase() || '')}
                       disabled
                       className="bg-gray-50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Read-only field</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('readOnlyField')}</p>
                   </div>
                 </div>
 
@@ -269,10 +271,10 @@ export default function ProfilePage() {
                     {saving ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Saving...
+                        {t('updating')}
                       </>
                     ) : (
-                      'Save Changes'
+                      t('updateUser')
                     )}
                   </Button>
                 </div>
@@ -285,13 +287,13 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
-                Account Information
+                {t('accountInformation')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-500">Account Created</Label>
+                  <Label className="text-sm font-medium text-gray-500">{t('accountCreated')}</Label>
                   <p className="text-sm">
                     {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -304,7 +306,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <Label className="text-sm font-medium text-gray-500">Last Updated</Label>
+                  <Label className="text-sm font-medium text-gray-500">{t('lastUpdated')}</Label>
                   <p className="text-sm">
                     {profile?.updated_at ? new Date(profile.updated_at).toLocaleDateString('en-US', {
                       year: 'numeric',

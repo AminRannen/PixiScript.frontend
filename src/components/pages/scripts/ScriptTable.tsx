@@ -41,16 +41,16 @@ export default function ScriptTable({
   };
 
   return (
-    <div className="w-full overflow-hidden">
-      <Table className="text-sm">
+    <div className="w-full overflow-x-auto">
+      <Table className="text-sm min-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-12"></TableHead>
-            <TableHead className="w-16">ID</TableHead>
-            <TableHead className="max-w-xs">{t("title")}</TableHead>
-            <TableHead className="max-w-xs">{t("goal")}</TableHead>
-            <TableHead className="w-40">{t("createdAt")}</TableHead>
-            <TableHead className="w-32 text-right">{t("actions")}</TableHead>
+            <TableHead className="w-12 min-w-[48px]"></TableHead>
+            <TableHead className="w-16 min-w-[64px]">ID</TableHead>
+            <TableHead className="min-w-[200px]">{t("title")}</TableHead>
+            <TableHead className="min-w-[200px]">{t("goal")}</TableHead>
+            <TableHead className="w-40 min-w-[160px]">{t("createdAt")}</TableHead>
+            <TableHead className="w-32 min-w-[140px] text-right">{t("actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -68,44 +68,58 @@ export default function ScriptTable({
                   className="rounded"
                 />
               </TableCell>
+
               <TableCell className="py-2 font-mono text-xs text-gray-500">
                 {script.id}
               </TableCell>
+
               <TableCell className="py-2">
-                <div className="truncate max-w-xs" title={script.title}>
+                <div
+                  className="whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
+                  title={script.title}
+                >
                   {script.title}
                 </div>
               </TableCell>
+
               <TableCell className="py-2">
-                <div className="truncate max-w-xs" title={script.goal}>
+                <div
+                  className="whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
+                  title={script.goal}
+                >
                   {script.goal}
                 </div>
               </TableCell>
-              <TableCell className="py-2 text-xs text-gray-500">
+
+              <TableCell className="py-2 text-xs text-gray-500 whitespace-nowrap">
                 {formatDate(script.created_at)}
               </TableCell>
-              <TableCell className="py-2 text-right space-x-1">
-                <Button
-                  className="bg-[#78c400] hover:bg-[#599400] text-white font-semibold border border-[#5a9e00]"
-                  size="sm"
-                  asChild
-                >
-                  <Link href={`/scripts/${script.id}/edit`}>{t("edit")}</Link>
-                </Button>
-                <Button
-                  className="bg-[#EF4E4E] hover:bg-[#E12D39] text-white font-medium border border-[#CF1124]"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(script.id);
-                  }}
-                >
-                  {t("delete")}
-                </Button>
+
+              <TableCell className="py-2 text-right" onClick={(e) => e.stopPropagation()}>
+                <div className="flex gap-1 justify-end">
+                  <Button
+                    className="bg-[#78c400] hover:bg-[#599400] text-white font-semibold border border-[#5a9e00]"
+                    size="sm"
+                    asChild
+                  >
+                    <Link href={`/scripts/${script.id}/edit`}>{t("edit")}</Link>
+                  </Button>
+                  <Button
+                    className="bg-[#EF4E4E] hover:bg-[#E12D39] text-white font-medium border border-[#CF1124]"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(script.id);
+                    }}
+                  >
+                    {t("delete")}
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
+
       </Table>
     </div>
   );

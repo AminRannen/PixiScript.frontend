@@ -1,5 +1,4 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +11,9 @@ import { SecondaryButton } from "@/components/SecondaryButton";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Input } from "@/components/ui/input";
-import LanguageSwitcher from "@/components/LanguageSwitcher"; 
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from 'react-i18next';
+
 const loginSchema = z.object({
   email: z.string().email("Email invalide"),
   password: z.string().min(6, "Mot de passe trop court"),
@@ -25,6 +25,7 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
   const { t } = useTranslation();
   const router = useRouter();
   const [loginError, setLoginError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -34,17 +35,48 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    const res = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+  const getRedirectPath = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "/dashboard";
+      case "marketer":
+        return "/scripts"; // or "/profile" based on your preference
+      default:
+        return "/scripts"; // default fallback
+    }
+  };
 
-    if (res?.ok) {
-      router.push("/dashboard");
-    } else {
-      setLoginError("Identifiants invalides");
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    setLoginError("");
+
+    try {
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        // Get the updated session to access user role
+        const session = await getSession();
+        const userRole = session?.user?.roles?.[0] || session?.user?.primary_role;
+        
+        if (userRole) {
+          const redirectPath = getRedirectPath(userRole);
+          router.push(redirectPath);
+        } else {
+          // Fallback if no role is found
+          router.push("/scripts");
+        }
+      } else {
+        setLoginError("Identifiants invalides");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError("Une erreur est survenue lors de la connexion");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,8 +84,10 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
     <PublicLayout>
       <div className="h-[80vh] flex flex-col items-center justify-center bg-gray-100">
         <div className="w-full flex justify-end px-8">
-          <LanguageSwitcher /> 
-        </div>        <form
+          <LanguageSwitcher />
+        </div>
+
+        <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white p-8 rounded-xl shadow-md w-[400px] space-y-4"
         >
@@ -65,6 +99,7 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
               type="email"
               placeholder="Email"
               {...register("email")}
+              disabled={isLoading}
             />
             {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
           </div>
@@ -74,15 +109,20 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
               type="password"
               placeholder="Password"
               {...register("password")}
+              disabled={isLoading}
             />
             {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
           </div>
 
           {loginError && <p className="text-sm text-red-600 text-center">{loginError}</p>}
 
-          <PrimaryButton className="px-6 py-2 bg-[#78c400] hover:bg-[#5B9200] text-[#F7F7F7] duration-200" 
-          type="submit">{t('signIn')}</PrimaryButton>
-
+          <PrimaryButton 
+            className="px-6 py-2 bg-[#78c400] hover:bg-[#5B9200] text-[#F7F7F7] duration-200"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? t('signIn') || 'Signing in...' : t('signIn')}
+          </PrimaryButton>
         </form>
       </div>
     </PublicLayout>
@@ -92,9 +132,19 @@ export default function Login({ csrfToken }: { csrfToken: string }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   if (session) {
+    // Role-based redirect on server side as well
+    const userRole = session?.user?.roles?.[0] || session?.user?.primary_role;
+    let destination = "/scripts"; // default
+
+    if (userRole === "admin") {
+      destination = "/dashboard";
+    } else if (userRole === "marketer") {
+      destination = "/";
+    }
+
     return {
       redirect: {
-        destination: "/dashboard",
+        destination,
         permanent: false,
       },
     };
